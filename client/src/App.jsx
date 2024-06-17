@@ -1,35 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// App.jsx
+import React, { useState, useEffect } from 'react';
+import QRCode from 'qrcode.react';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [qrValue, setQrValue] = useState('');
+  const [refreshCount, setRefreshCount] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRefreshCount(refreshCount + 1);
+      setQrValue(`https://example.com?count=${refreshCount}`);
+    }, 15000); // 15 seconds
+
+    return () => clearInterval(interval);
+  }, [refreshCount]);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="qr-container">
+      <QRCode value={qrValue} size={256} />
+      <p>Refreshed {refreshCount} times</p>
+    </div>
+  );
+};
 
-export default App
+export default App;
